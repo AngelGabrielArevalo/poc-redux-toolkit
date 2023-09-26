@@ -16,35 +16,36 @@ function AppTareas(): JSX.Element {
     }, [dispatch]);
 
     return (
-        <>
+        <div className="container">
             <h1 className="text-center">Mis Tareas</h1>
             <hr />
 
             <div className="row">
-                <h4>
-                    <small>Tareas: {isLoading ? "-" : tareas.length} </small>
-                    <small>
-                        Pendientes:{" "}
-                        {isLoading ? "-" : tareas.filter((tareas) => !tareas.realizada).length}
-                    </small>{" "}
-                </h4>
-                <div className="col-7">
+                <div className="col-md-7">
+                    <h4>
+                        <small>Tareas: {isLoading ? "-" : tareas.length} </small>
+                        <small>
+                            Pendientes:{" "}
+                            {isLoading ? "-" : tareas.filter((tareas) => !tareas.realizada).length}
+                        </small>{" "}
+                    </h4>
+
                     {isLoading ? (
                         <div className="text-center">
-                            <Spinner animation="border" variant="primary" className="mt-5"/>
+                            <Spinner animation="border" variant="primary" className="mt-5" />
                         </div>
                     ) : (
                         <ListaTareas tareas={tareas} />
                     )}
                 </div>
 
-                <div className="col-5">
+                <div className="col-md-5 mt-4 mt-md-0">
                     <h4>Agregar Tarea</h4>
                     <hr />
                     <AgregarTarea />
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
