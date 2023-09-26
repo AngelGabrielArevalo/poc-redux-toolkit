@@ -21,12 +21,12 @@ export const tareaSlice = createSlice({
     reducers: {
         agregarTarea: (state: State, action: PayloadAction<Tarea>) => {
             state.tareas.push(action.payload);
-            localStorage.setItem("tareas", JSON.stringify(state));
+            localStorage.setItem("tareas", JSON.stringify(state.tareas));
         },
         borrarTarea: (state: State, action: PayloadAction<number>) => {
             const idAEliminar = action.payload;
             state.tareas = state.tareas.filter((tarea) => tarea.id !== idAEliminar);
-            localStorage.setItem("tareas", JSON.stringify(state));
+            localStorage.setItem("tareas", JSON.stringify(state.tareas));
             return state;
         },
         cambiarEstadoDeTarea: (state, action: PayloadAction<number>) => {
@@ -35,7 +35,7 @@ export const tareaSlice = createSlice({
             if (tarea) {
                 tarea.realizada = !tarea.realizada;
             }
-            localStorage.setItem("tareas", JSON.stringify(state));
+            localStorage.setItem("tareas", JSON.stringify(state.tareas));
         },
     },
     extraReducers: (builder) => {
@@ -45,7 +45,7 @@ export const tareaSlice = createSlice({
             })
             .addCase(fetchTareas.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.tareas = action.payload.tareas;
+                state.tareas = action.payload;
             });
     },
 });
