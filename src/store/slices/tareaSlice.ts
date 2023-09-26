@@ -1,30 +1,52 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Tarea } from "../../types";
 
-const initialState: Tarea[] = JSON.parse(localStorage.getItem("tareas") ?? "[]") as unknown as Tarea[];
+export const fetchTareas = createAsyncThunk("tareas/cargarTareasIniciales", async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return JSON.parse(localStorage.getItem("tareas") ?? "[]");
+});
+
+type State = {
+    tareas: Tarea[];
+    isLoading: boolean;
+};
+const initialState: State = {
+    tareas: [],
+    isLoading: false,
+};
 
 export const tareaSlice = createSlice({
     name: "tareas",
     initialState,
     reducers: {
-        agregarTarea: (state: Tarea[], action: PayloadAction<Tarea>) => {
-            state.push(action.payload);
+        agregarTarea: (state: State, action: PayloadAction<Tarea>) => {
+            state.tareas.push(action.payload);
             localStorage.setItem("tareas", JSON.stringify(state));
         },
-        borrarTarea: (state: Tarea[], action: PayloadAction<number>) => {
+        borrarTarea: (state: State, action: PayloadAction<number>) => {
             const idAEliminar = action.payload;
-            state = state.filter((tarea) => tarea.id !== idAEliminar);
+            state.tareas = state.tareas.filter((tarea) => tarea.id !== idAEliminar);
             localStorage.setItem("tareas", JSON.stringify(state));
             return state;
         },
         cambiarEstadoDeTarea: (state, action: PayloadAction<number>) => {
             const id = action.payload;
-            const tarea = state.find((tarea) => tarea.id === id);
+            const tarea = state.tareas.find((tarea) => tarea.id === id);
             if (tarea) {
                 tarea.realizada = !tarea.realizada;
             }
             localStorage.setItem("tareas", JSON.stringify(state));
         },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchTareas.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchTareas.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.tareas = action.payload.tareas;
+            });
     },
 });
 
