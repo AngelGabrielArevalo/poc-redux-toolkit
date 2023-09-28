@@ -11,7 +11,6 @@ function AppTareas(): JSX.Element {
     const { tareas, isLoading } = useSelector((state: RootState) => state.tareas);
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         dispatch(fetchTareas() as any);
     }, [dispatch]);
 
